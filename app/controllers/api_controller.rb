@@ -8,7 +8,7 @@ class ApiController < ApplicationController
     line_events = client.parse_events_from(body)
     events = Event.creaete_from_line_events(line_events)
     events.each do |event|
-      ReplyMessageJob.perform_now event.id
+      ReplyMessageJob.perform_later event.id
     end
     head :ok
   end
