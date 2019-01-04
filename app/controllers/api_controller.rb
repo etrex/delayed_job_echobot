@@ -1,6 +1,8 @@
 require 'line/bot'
 
 class ApiController < ApplicationController
+  protect_from_forgery with: :null_session
+
   def create
     body = request.body.read
     events = client.parse_events_from(body)
