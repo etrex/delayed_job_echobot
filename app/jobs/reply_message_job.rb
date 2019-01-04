@@ -1,17 +1,18 @@
-require 'line/bot'
+class ReplyMessageJob < ApplicationJob
+  queue_as :default
 
-class ApiController < ApplicationController
-  protect_from_forgery with: :null_session
+  def perform(event_id)
+    event = Event.find_by(id: event_id)
+    return if event.nil?
 
-  def create
-    body = request.body.read
-    line_events = client.parse_events_from(body)
-    events = Event.creaete_from_line_events(line_events)
-    events.each do |event|
-      ReplyMessageJob.perform_now event.id
-    end
-    head :ok
+    message = {
+      type: 'text',
+      text: event.message
+    }
+    client.reply_message(event.reply_token, message)
   end
+
+  private
 
   def client
     @client ||= Line::Bot::Client.new do |config|
