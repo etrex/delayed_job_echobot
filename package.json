@@ -1,0 +1,5 @@
+{
+  "name": "delayed_job_echobot",
+  "private": true,
+  "dependencies": {}
+}
